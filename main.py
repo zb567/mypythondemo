@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+import os
 
 app = Flask(__name__)
 
@@ -12,4 +13,6 @@ def get_data():
     return jsonify(data={"key": "value"})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # 获取环境变量中的端口，如果没有设置则使用默认值 8061
+    port = int(os.getenv("FLASK_PORT", 8062))
+    app.run(host='0.0.0.0', port=port)
