@@ -7,8 +7,8 @@ services:
     ports:
       - "8061:8061"  # 映射容器端口到主机
     volumes:
-      - ./*:/  # 将本地的 Python 脚本挂载到容器中
+      - ./:/app  # 将本地的 Python 脚本挂载到容器中
     environment:
       - FLASK_PORT=8061  # 设置 Flask 运行的端口
-    command: sh -c "pip install -r requirements.txt && python /main.py"  # 合并命令
+    command: sh -c "pip install -r /app/requirements.txt && python /app/main.py"  # 合并命令
     restart: always
