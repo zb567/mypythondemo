@@ -5,10 +5,12 @@ services:
     image: python:3.8  # 使用官方 Python 镜像，指定 Python 版本
     container_name: mypython
     ports:
-      - "8061:8061"  # 映射容器端口到主机
+      - "${PORT}:${PORT}"  # 使用环境变量PORT
     volumes:
       - ./:/app  # 将本地的 Python 脚本挂载到容器中
     environment:
-      - FLASK_PORT=8061  # 设置 Flask 运行的端口
+      - FLASK_PORT=${PORT}  # 使用环境变量PORT
     command: sh -c "pip install -r /app/requirements.txt && python /app/main.py"  # 合并命令
     restart: always
+    env_file:
+      - .env
