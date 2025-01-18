@@ -3,53 +3,21 @@ pipeline {
 
     environment {
             REMOTE_SERVER = 'root@10.101.169.172' // 替换为你的远程用户名和IP或域名
-            PROJECT_PATH = '/var/jenkins_home/workspace/testpython'
+            JEN_PATH = '/var/jenkins_home/workspace/testpython'
+            SER_PATH = '~/myjenkins/mypython'
         }
 
     stages {
-        stage('Build') {
-            steps {
-                echo 'Building..'
-                // 在这里添加构建步骤，例如编译代码
-                // sh '/var/jenkins_home/file/apache-maven-3.8.8/bin/mvn clean package'
-
-
-
-            }
-        }
-//         stage('Test') {
-//             steps {
-//                 echo 'Testing..'
-//                 // 在这里添加测试步骤，例如运行单元测试
-//                 sh 'mvn test'
-//             }
-//         }
+        
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-                // 在这里添加部署步骤，例如将构建好的应用部署到服务器
-//                 sh 'scp target/myapp.jar user@server:/opt/deploy/'
-
+               
+                sh "ssh ${REMOTE_SERVER} 'rm -rf ${SER_PATH}/*'"
                 // 上传文件到服务器
-//                 withCredentials([sshUserPrivateKey(credentials
-//                 Id: 'jenkins-ssh-key', keyFileVariable: 'SSH_KEY')]) {
-//                     sh 'scp -i $SSH_KEY target/myapp.jar user@server:/opt/deploy/'
-//                 }
+                sh "scp ${PROJECT_PATH}/* ${REMOTE_SERVER}:${SER_PATH}"
 
-
-                sh "ssh ${REMOTE_SERVER} 'rm -rf /root/myjenkins/mypython/*'"
-//                 // 上传文件到服务器
-                sh "scp ${PROJECT_PATH}/* ${REMOTE_SERVER}:~/myjenkins/mypython"
-//                 sh "scp ${PROJECT_PATH}/docker-compose.yml ${REMOTE_SERVER}:~/myjenkins/mysky"
-//                 sh "scp ${PROJECT_PATH}/jenkins.sh ${REMOTE_SERVER}:~/myjenkins/mysky"
-// //                 // 执行远程服务器脚本
-// //                 sshagent(['your-ssh-credentials-id']) {
-// //                     sh 'ssh user@server "/opt/deploy/deploy-script.sh"'
-// //                 }
-// //                 sh "ssh ${REMOTE_SERVER} 'bash -s' < /path/to/local/script.sh"
-                sh "ssh ${REMOTE_SERVER} 'bash /root/myjenkins/mypython/jenkins.sh'"
-
-
+                sh "ssh ${REMOTE_SERVER} 'bash ${SER_PATH}/jenkins.sh'"
             }
         }
     }
