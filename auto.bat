@@ -1,4 +1,3 @@
-
 @echo off
 REM 设置提交信息
 set /p commit_message="Enter commit message: "
