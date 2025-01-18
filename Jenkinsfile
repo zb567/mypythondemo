@@ -37,7 +37,7 @@ pipeline {
 //                 }
 
 
-                // sh "ssh ${REMOTE_SERVER} 'rm -rf /root/myjenkins/mypython/*'"
+                sh "ssh ${REMOTE_SERVER} 'rm -rf /root/myjenkins/mypython/*'"
 //                 // 上传文件到服务器
                 sh "scp ${PROJECT_PATH}/* ${REMOTE_SERVER}:~/myjenkins/mypython"
 //                 sh "scp ${PROJECT_PATH}/docker-compose.yml ${REMOTE_SERVER}:~/myjenkins/mysky"
