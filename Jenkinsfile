@@ -15,9 +15,9 @@ pipeline {
                
                 sh "ssh ${REMOTE_SERVER} 'rm -rf ${SER_PATH}/*'"
                 // 上传文件到服务器
-                sh "scp ${PROJECT_PATH}/* ${REMOTE_SERVER}:${SER_PATH}"
+                sh "scp ${JEN_PATH}/* ${REMOTE_SERVER}:${SER_PATH}"
 
-                sh "ssh ${REMOTE_SERVER} 'bash ${SER_PATH}/jenkins.sh'"
+                sh "ssh ${JEN_PATH} 'bash ${SER_PATH}/jenkins.sh'"
             }
         }
     }
