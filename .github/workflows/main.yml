@@ -6,6 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: 
+      name: test
 
     steps:
     - name: Checkout code
@@ -60,6 +62,17 @@ jobs:
       run: |
         ls -R downloaded-artifacts
 
+    - name: Install ngrok
+        run： |
+          curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+          echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
+          sudo apt update && sudo apt install ngrok
+
+    - name: Authenticate ngrok
+      run: |
+        ngrok authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
+
+
     - name: Install and Run
       run: |
         # 创建虚拟环境
@@ -76,28 +89,33 @@ jobs:
         pip list | grep mypythondemo
     
         # # 运行包中的模块（示例）
-        # python -m mypythondemo.main
+        python -m mypythondemo.main
+
+    - name: Start service with ngrok
+      run: |
+        ngrok http 8000 &
+        python -m mypythondemo.main
     
         # # # 或者执行入口点命令（如果配置了 entry_points）
         # # mydemo-command --version
 
-    - name: Run Flask server and test
-      run: |
-        # 后台启动 Flask 并获取进程 ID
-        python -m mypythondemo.main > flask.log 2>&1 &
-        FLASK_PID=$!
-        echo "Flask PID: $FLASK_PID"
+    # - name: Run Flask server and test
+    #   run: |
+    #     # 后台启动 Flask 并获取进程 ID
+    #     python -m mypythondemo.main > flask.log 2>&1 &
+    #     FLASK_PID=$!
+    #     echo "Flask PID: $FLASK_PID"
 
-        # 等待服务器启动
-        sleep 5
+    #     # 等待服务器启动
+    #     sleep 5
 
-        # 验证服务是否正常响应
-        curl -v http://localhost:8062 || :
-        curl -v http://localhost:8062/api/data || :
+    #     # 验证服务是否正常响应
+    #     curl -v http://localhost:8062 || :
+    #     curl -v http://localhost:8062/api/data || :
 
-        # 主动终止 Flask 进程
-        kill $FLASK_PID
-        wait $FLASK_PID 2>/dev/null || true
+    #     # 主动终止 Flask 进程
+    #     kill $FLASK_PID
+    #     wait $FLASK_PID 2>/dev/null || true
 
-        # 显示日志
-        cat flask.log
+    #     # 显示日志
+    #     cat flask.log
