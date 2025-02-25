@@ -74,6 +74,6 @@ jobs:
         # 运行包中的模块（示例）
         python -m mypythondemo.main
     
-        # # 或者执行入口点命令（如果配置了 entry_points）
-        # mydemo-command --version
+        # 或者执行入口点命令（如果配置了 entry_points）
+        mydemo-command --version
     
