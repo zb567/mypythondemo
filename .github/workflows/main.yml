@@ -11,7 +11,49 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: init
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+        cache: 'pip'  # 启用 pip 缓存
+        
+    - name: Upgrade pip and setuptools
       run: |
-        python -V
-        python -h
+        python -m pip install --upgrade pip setuptools
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Build package
+      run: |
+        python setup.py sdist bdist_wheel  # 如果项目需要打包
+
+    - name: List build artifacts
+      run: |
+        echo "构建产物目录结构："
+        ls -R dist/
+        echo "测试报告："
+        ls -R coverage/
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: py-build-${{ github.run_id }}
+        path: |
+          dist/*.whl
+          dist/*.tar.gz
+          coverage.xml
+        retention-days: 3
+        if-no-files-found: error
+
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: py-build-${{ github.run_id }}
+        path: downloaded-artifacts
+
+    - name: Verify artifacts
+      run: |
+        ls -R downloaded-artifacts
+    
