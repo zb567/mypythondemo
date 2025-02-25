@@ -46,6 +46,7 @@ jobs:
           dist/*.whl
           dist/*.tar.gz
           coverage.xml
+          requirements.txt
         retention-days: 3
         if-no-files-found: error
 
@@ -64,6 +65,9 @@ jobs:
         # 创建虚拟环境
         python -m venv venv
         source venv/bin/activate
+
+        # 安装依赖
+        pip install -r downloaded-artifacts/requirements.txt
     
         # 安装构建的包
         pip install downloaded-artifacts/dist/*.whl  # 或使用 tar.gz
@@ -74,6 +78,6 @@ jobs:
         # 运行包中的模块（示例）
         python -m mypythondemo.main
     
-        # 或者执行入口点命令（如果配置了 entry_points）
-        mydemo-command --version
+        # # 或者执行入口点命令（如果配置了 entry_points）
+        # mydemo-command --version
     
