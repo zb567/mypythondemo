@@ -25,9 +25,13 @@ jobs:
       run: |
         pip install -r requirements.txt
 
+    - name: Install build tools
+      run: |
+        python -m pip install --upgrade setuptools wheel
+    
     - name: Build package
       run: |
-        python setup.py sdist bdist_wheel  # 如果项目需要打包
+        python setup.py sdist bdist_wheel
 
     - name: List build artifacts
       run: |
