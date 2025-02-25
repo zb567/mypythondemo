@@ -58,4 +58,22 @@ jobs:
     - name: Verify artifacts
       run: |
         ls -R downloaded-artifacts
+
+    - name: Install and Run
+      run: |
+        # 创建虚拟环境
+        python -m venv venv
+        source venv/bin/activate
+    
+        # 安装构建的包
+        pip install downloaded-artifacts/dist/*.whl  # 或使用 tar.gz
+        
+        # 验证安装
+        pip list | grep mypythondemo
+    
+        # 运行包中的模块（示例）
+        python -m mypythondemo.main
+    
+        # # 或者执行入口点命令（如果配置了 entry_points）
+        # mydemo-command --version
     
