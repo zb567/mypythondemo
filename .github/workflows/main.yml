@@ -104,7 +104,12 @@ jobs:
         ngrok http 8062 > ngrok.log 2>&1 &
         sleep 5  # 等待 ngrok 启动
         cat ngrok.log
-        python -m mypythondemo.main
+        
+        python -m mypythondemo.main &
+        FLASK_PID=$!
+
+        # 保持脚本运行，以便查看日志
+        wait $FLASK_PID
     
         # # # 或者执行入口点命令（如果配置了 entry_points）
         # # mydemo-command --version
