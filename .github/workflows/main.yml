@@ -13,4 +13,5 @@ jobs:
 
     - name: init
       run: |
-        python -version
+        python -V
+        python -h
