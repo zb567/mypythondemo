@@ -1,0 +1,16 @@
+name: Python CI on testpythonaction
+
+on: 
+  push:
+    branches: ["testpythonaction"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: init
+      run: |
+        python -version
