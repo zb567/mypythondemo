@@ -75,9 +75,29 @@ jobs:
         # 验证安装
         pip list | grep mypythondemo
     
-        # 运行包中的模块（示例）
-        python -m mypythondemo.main
+        # # 运行包中的模块（示例）
+        # python -m mypythondemo.main
     
-        # # 或者执行入口点命令（如果配置了 entry_points）
-        # mydemo-command --version
-    
+        # # # 或者执行入口点命令（如果配置了 entry_points）
+        # # mydemo-command --version
+
+    - name: Run Flask server and test
+      run: |
+        # 后台启动 Flask 并获取进程 ID
+        python -m mypythondemo.main > flask.log 2>&1 &
+        FLASK_PID=$!
+        echo "Flask PID: $FLASK_PID"
+
+        # 等待服务器启动
+        sleep 5
+
+        # 验证服务是否正常响应
+        curl -v http://localhost:8062 || :
+        curl -v http://localhost:8062/api/data || :
+
+        # 主动终止 Flask 进程
+        kill $FLASK_PID
+        wait $FLASK_PID 2>/dev/null || true
+
+        # 显示日志
+        cat flask.log
