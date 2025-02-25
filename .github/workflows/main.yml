@@ -101,7 +101,9 @@ jobs:
 
     - name: Start service with ngrok
       run: |
-        ngrok http 8062 &
+        ngrok http 8062 > ngrok.log 2>&1 &
+        sleep 5  # 等待 ngrok 启动
+        cat ngrok.log
         python -m mypythondemo.main
     
         # # # 或者执行入口点命令（如果配置了 entry_points）
